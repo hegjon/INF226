@@ -1,0 +1,107 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+
+\title{INF226 Group 5}
+\author{Jonny Heggheim \and Samson Gejibo}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Project Objective}
+Aim to introduce static code analysis tools to analyze and understand security
+issues relating to development of net-based applications, and be in a position
+to utilize programming techniques as defense against different kinds of
+security risks.
+
+\begin{defn}
+``Static code analysis is the analysis of computer software that is performed
+without actually executing programs built from that software.''  - Wikipedia
+\end{defn}
+Today, There are different types of analyzer available in the market,
+both commercial and open-source. KlockWork, CodeSecure and Fortify can be an
+examples of static code analyzers.
+In this we mainly focused on Fortify static software security analyzer.
+
+
+\section{What is Fortify?}
+Fortify Source Code Analyzer (SCA) is a set of software security analyzers
+that search for violations of security‐specific coding rules and guidelines in
+a variety of languages. The rich data provided by Fortify SCA language
+technology enables the analyzers to pinpoint and prioritize violations.
+In The analysis information produced by SCA helps us deliver more secure
+software, as well as making security code reviews more efficient, consistent,
+and complete. This is especially advantageous when large code bases are
+involved. The modular architecture of SCA allows you to quickly upload new,
+third party, and customer‐specific security rules. [www.fortify.com]
+
+From a list of suggested projects, we have chosen OpenXdata source code as an
+input to static software analyzer.
+
+
+\section{What is OpenXdata?}
+“OpenXdata is a community-developed, open-source, enterprise end-to-end
+software solution for handling virtually any type of forms based data
+collection and management using mobile devices and web forms
+(online or offline).
+
+OpenXdata is the first FREE and completely OPEN SOURCE end-to-end
+solution of its kind that can use both high- and low-end mobile devices
+and mobile phones as well as in a regular web-browser to show and
+capture forms based data.”
+
+
+\section{What is needed to perform analysis?}
+\begin{itemize}
+ \item Fortify Software with license (fortify.com)
+ \item OpenXdata source code (trac.openxdata.org)
+ \item Ubuntu 10.10
+ \item Eclipse IDE 3.6
+\end{itemize}
+
+\section{System Setup}
+
+\subsection{Fortify}
+
+Installation of Fortify Source Code Analysis Suite on Ubuntu 10.10 was straight forward. We used the following steps:
+\begin{itemize}
+ \item Downloaded the tarball file from: http://software.ii.uib.no/uib/inf226/fortify/ (FrAcademicmLicensence)
+ \item We extract the tarball using the following command: tar xvzf Fortify-360-2.6.5-Analyzers_and_Apps-Linux-x86.tar.gz
+ \item Copy the fortify.license file into installation directory.
+ \item To update rule packs, under bin directory of Fortify, we run rulepackupdate on the terminal window
+ \item run eclipsepostinstall, under the Fortify/bin folder.
+\end{itemize}
+
+Fortify as standalone analyzer and with eclipse have been done successfully without any challenge.
+The next step was importing OpenXdata into eclipse IDE.
+
+What is required to build and run OpenXdata?
+\begin{itemize}
+ \item Java JDK 6
+ \item MySQL
+ \item Apache Tomcat 6
+ \item Maven
+ \item (Subversion)
+\end{itemize}
+
+\subsection{OpenXData}
+How to build retrieve and build OpenXdata?
+Since we the source code is provided by the course, we don’t need to do a checkout from Subversion. So we just need to run `mvn clean install`
+How to run OpenXdata?
+\begin{enumerate}
+ \item Install Apache Tomcat 6 
+ \item Install MySQL
+ \begin{enumerate}
+  \item Create database called openxdata
+  \item Grant the default user openxdata/openxdata
+ \end{enumerate}
+ \item Deploy admin/target/admin.war to Apache Tomcat
+ \item OpenXdata will create and populate the database
+ \item Open the browser at http://localhost:8080/admin
+\end{enumerate}
+
+\end{document}
