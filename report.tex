@@ -72,7 +72,7 @@ Installation of Fortify Source Code Analysis Suite on Ubuntu 10.10 was straight 
  \item Downloaded the tarball file from: http://software.ii.uib.no/uib/inf226/fortify/ (FrAcademicmLicensence)
  \item We extract the tarball using the following command: tar xvzf Fortify-360-2.6.5-Analyzers_and_Apps-Linux-x86.tar.gz
  \item Copy the fortify.license file into installation directory.
- \item To update rule packs, under bin directory of Fortify, we run rulepackupdate on the terminal window
+ \item To update rule packs, under bin directory of Fortify, we run rulepackupdate on the terminal window.
  \item run eclipsepostinstall, under the Fortify/bin folder.
 \end{itemize}
 
@@ -103,5 +103,35 @@ How to run OpenXdata?
  \item OpenXdata will create and populate the database
  \item Open the browser at http://localhost:8080/admin
 \end{enumerate}
+
+\section{Critical}
+
+\subsection{Cross-site Scripting: Persistence}
+Fortify found 3 security flaws, all of them are false positves.
+
+CSVDataExport.java:117
+printWriter.write(line + "\\n");
+The produced output is a CSV file, and is not supposed to be executed by the browser.
+
+DefaultXformSerializer.java:64
+dos.writeUTF(xml);
+The produced output is a defined binary protocol, the data is read by the mobile client with a parser made by OpenXData
+
+DefaultXformSerializer.java:82
+dos.writeUTF((String)study[1]);
+Same issue as the previous.
+
+\subsection{Cross-Site Scripting: Reflected}
+StudyExportServlet.java:106
+response.getOutputStream().println(message);
+This is a real issue when the browser executes this as JavaScript.
+
+Message is generated like this
+request.getParameter("type") + " is not a valid valid type"
+
+The code is used for error reporting, but it also sets the content type to "text/plain".
+This migth reduce the posibility to exploit the security bug.
+
+
 
 \end{document}
