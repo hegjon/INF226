@@ -149,5 +149,15 @@ The same as previous, but makes it harder for the attacker.
 OpenXDataPropertyPlaceholderConfigurer.java:96 and OpenXDataUtil.java:79 
 is false positives since the variable are from the propertyfile that the system administrator provides OpenXdata.
 
+\subsection{Privacy Violation}
+DefaultXformSerializer.java:99-102
+dos.writeByte(users.size());
+for(Object[] user : users){
+    dos.writeInt((Integer)user[0]);
+    dos.writeUTF((String)user[1]);
+    dos.writeUTF((String)user[2]);
+    dos.writeUTF((String)user[3]);
+}
+This is the intention, so we consider this as false positive.
 
 \end{document}
