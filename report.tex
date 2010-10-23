@@ -132,6 +132,22 @@ request.getParameter("type") + " is not a valid valid type"
 The code is used for error reporting, but it also sets the content type to "text/plain".
 This migth reduce the posibility to exploit the security bug.
 
+\subsection{Password Management: Hardcoded Password}
+Fortify reports about three issues, all of them are within the tests that are only used
+by developers to automated tests. We consider them as false positves since OpenXdata don't
+include them for users.
+
+\subsection{Path Manipulation}
+from BirtImagesServlet.java:61
+FileInputStream is = new FileInputStream(pathName + request.getParameter("imageName"));
+
+This allows the attacker to read all files that the servlet container have access to.
+
+OTAServlet.java:79
+The same as previous, but makes it harder for the attacker.
+
+OpenXDataPropertyPlaceholderConfigurer.java:96 and OpenXDataUtil.java:79 
+is false positives since the variable are from the propertyfile that the system administrator provides OpenXdata.
 
 
 \end{document}
