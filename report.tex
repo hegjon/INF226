@@ -180,4 +180,28 @@ public void setDataExport(DataExport dataExport) {
 There are some setters in the Servlets that is used for unit testing. These methods will not be called in production.
 We consider them as false positives.
 
+\subsection{SQL Injection}
+HibernateFormDownloadDAO.java:113
+The SQL is generated like this
+"select form_definition_version_id,xform from form_definition_version fdv" +
+    " inner join form_definition fd on fd.form_definition_id=fdv.form_definition_id" +
+    " where xform is not null" + (studyId != null ? " and fd.study_id="+studyId : "") +
+    (defaultForms ? " and is_default=1" : "") + " order by fd.name";
+
+where studyId is an Integer type, so we dont think that an attacker can inject SQL in this case.
+
+
+HibernateFormDownloadDAO.java:149
+The SQL is generated like this:
+"select xform_text from form_definition_version_text where locale_key='"+ locale + "' and form_definition_version_id="+formId);
+
+where locale is a String that is not validated, the attacker needs to be authentication before he can use this for an attack.
+The source of the locale variable is: request.getParameter(``locale'')
+
+
+JdbcRdmsExporterDAO.java + friends
+OpenXdata have an exporter that exports submitted forms (XML files) to another database, because of the nature of the task it is hard to use prepared statements.
+There are no validations to check that the submitted data contains injected SQL.
+
+
 \end{document}
