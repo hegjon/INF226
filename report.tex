@@ -176,11 +176,12 @@ This is the intention, so we consider this as false positive.
 \subsection{Race Condition: Singleton Member Field}
 ResetPasswordServlet.java:78-82
 \begin{lstlisting}
-mailSender = (org.springframework.mail.javamail.JavaMailSenderImpl) ctx.getBean("mailSender");
-userService = (UserService) ctx.getBean("userService");
-userDetailsService = (UserDetailsService) ctx.getBean("userDetailsService");
-messageSource = (ResourceBundleMessageSource) ctx.getBean("messageSource");
-userLocale = new Locale((String)request.getSession().getAttribute("locale")); //new AcceptHeaderLocaleResolver().resolveLocale(request);
+mailSender = ctx.getBean("mailSender");
+userService = ctx.getBean("userService");
+userDetailsService = ctx.getBean("userDetailsService");
+messageSource = ctx.getBean("messageSource");
+userLocale = new Locale((String)
+	request.getSession().getAttribute("locale"));
 \end{lstlisting}
 The class ResetPasswordServlet is a singleton, so the member fields is shared between users.
 The result is that one user could see another user's data.
