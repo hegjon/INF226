@@ -1,5 +1,7 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage{amsthm}
+\usepackage{listings}
+
 \theoremstyle{definition}
 \newtheorem*{defn}{Definition}
 
@@ -110,7 +112,9 @@ How to run OpenXdata?
 Fortify found 3 security flaws, all of them are false positves.
 
 CSVDataExport.java:117
-printWriter.write(line + "\\n");
+\begin{lstlisting}
+printWriter.write(line + "\n");
+\end{lstlisting}
 The produced output is a CSV file, and is not supposed to be executed by the browser.
 
 DefaultXformSerializer.java:64
@@ -127,8 +131,9 @@ response.getOutputStream().println(message);
 This is a real issue when the browser executes this as JavaScript.
 
 Message is generated like this
+\begin{lstlisting}
 request.getParameter("type") + " is not a valid valid type"
-
+\end{lstlisting}
 The code is used for error reporting, but it also sets the content type to "text/plain".
 This migth reduce the posibility to exploit the security bug.
 
@@ -162,39 +167,44 @@ This is the intention, so we consider this as false positive.
 
 \subsection{Race Condition: Singleton Member Field}
 ResetPasswordServlet.java:78-82
+\begin{lstlisting}
 mailSender = (org.springframework.mail.javamail.JavaMailSenderImpl) ctx.getBean("mailSender");
 userService = (UserService) ctx.getBean("userService");
 userDetailsService = (UserDetailsService) ctx.getBean("userDetailsService");
 messageSource = (ResourceBundleMessageSource) ctx.getBean("messageSource");
 userLocale = new Locale((String)request.getSession().getAttribute("locale")); //new AcceptHeaderLocaleResolver().resolveLocale(request);
-
+\end{lstlisting}
 The class ResetPasswordServlet is a singleton, so the member fields is shared between users.
 The result is that one user could see another user's data.
 Since all beans that is provided here is singletons it would not make a different, but for readability it should be fixed.
 
 
 DataExportServlet.java:116 ++
+\begin{lstlisting}
 public void setDataExport(DataExport dataExport) {
     this.dataExport = dataExport;
 }
+\end{lstlisting}
 There are some setters in the Servlets that is used for unit testing. These methods will not be called in production.
 We consider them as false positives.
 
 \subsection{SQL Injection}
 HibernateFormDownloadDAO.java:113
 The SQL is generated like this
+\begin{lstlisting}
 "select form_definition_version_id,xform from form_definition_version fdv" +
     " inner join form_definition fd on fd.form_definition_id=fdv.form_definition_id" +
     " where xform is not null" + (studyId != null ? " and fd.study_id="+studyId : "") +
     (defaultForms ? " and is_default=1" : "") + " order by fd.name";
-
+\end{lstlisting}
 where studyId is an Integer type, so we dont think that an attacker can inject SQL in this case.
 
 
 HibernateFormDownloadDAO.java:149
 The SQL is generated like this:
+\begin{lstlisting}
 "select xform_text from form_definition_version_text where locale_key='"+ locale + "' and form_definition_version_id="+formId);
-
+\end{lstlisting}
 where locale is a String that is not validated, the attacker needs to be authentication before he can use this for an attack.
 The source of the locale variable is: request.getParameter(``locale'')
 
