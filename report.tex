@@ -149,8 +149,9 @@ include them for users.
 
 \subsection{Path Manipulation}
 from BirtImagesServlet.java:61
+\begin{lstlisting}
 FileInputStream is = new FileInputStream(pathName + request.getParameter("imageName"));
-
+\end{lstlisting}
 This allows the attacker to read all files that the servlet container have access to.
 
 OTAServlet.java:79
@@ -161,6 +162,7 @@ is false positives since the variable are from the propertyfile that the system 
 
 \subsection{Privacy Violation}
 DefaultXformSerializer.java:99-102
+\begin{lstlisting}
 dos.writeByte(users.size());
 for(Object[] user : users){
     dos.writeInt((Integer)user[0]);
@@ -168,6 +170,7 @@ for(Object[] user : users){
     dos.writeUTF((String)user[2]);
     dos.writeUTF((String)user[3]);
 }
+\end{lstlisting}
 This is the intention, so we consider this as false positive.
 
 \subsection{Race Condition: Singleton Member Field}
