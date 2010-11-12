@@ -116,23 +116,27 @@ How to run OpenXdata?
 \subsection{Cross-site Scripting: Persistence}
 Fortify found 3 security flaws, all of them are false positves.
 
-CSVDataExport.java:117
-\begin{lstlisting}
+\begin{lstlisting}[caption=CSVDataExport.java:117]
 printWriter.write(line + "\n");
 \end{lstlisting}
 The produced output is a CSV file, and is not supposed to be executed by the browser.
 
-DefaultXformSerializer.java:64
+
+\begin{lstlisting}[caption=DefaultXformSerializer.java:64]
 dos.writeUTF(xml);
+\end{lstlisting}
 The produced output is a defined binary protocol, the data is read by the mobile client with a parser made by OpenXData
 
-DefaultXformSerializer.java:82
+
+\begin{lstlisting}[caption=DefaultXformSerializer.java:82]
 dos.writeUTF((String)study[1]);
+\end{lstlisting}
 Same issue as the previous.
 
 \subsection{Cross-Site Scripting: Reflected}
-StudyExportServlet.java:106
+\begin{lstlisting}[caption=StudyExportServlet.java:106]
 response.getOutputStream().println(message);
+\end{lstlisting}
 This is a real issue when the browser executes this as JavaScript.
 
 Message is generated like this
