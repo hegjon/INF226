@@ -141,7 +141,8 @@ This is a real issue when the browser executes this as JavaScript.
 
 Message is generated like this
 \begin{lstlisting}
-request.getParameter("type") + " is not a valid valid type"
+request.getParameter("type") + 
+    " is not a valid valid type"
 \end{lstlisting}
 The code is used for error reporting, but it also sets the content type to "text/plain".
 This migth reduce the posibility to exploit the security bug.
