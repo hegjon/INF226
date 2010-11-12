@@ -217,10 +217,11 @@ The SQL is generated like this
 where studyId is an Integer type, so we dont think that an attacker can inject SQL in this case.
 
 
-HibernateFormDownloadDAO.java:149
 The SQL is generated like this:
-\begin{lstlisting}
-"select xform_text from form_definition_version_text where locale_key='"+ locale + "' and form_definition_version_id="+formId);
+\begin{lstlisting}[caption=HibernateFormDownloadDAO.java:149]
+"select xform_text from form_definition_version_text "+
+"where locale_key='"+ locale +
+"' and form_definition_version_id="+formId);
 \end{lstlisting}
 where locale is a String that is not validated, the attacker needs to be authentication before he can use this for an attack.
 The source of the locale variable is: request.getParameter(``locale'')
