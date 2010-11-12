@@ -155,7 +155,8 @@ include them for users.
 \subsection{Path Manipulation}
 from BirtImagesServlet.java:61
 \begin{lstlisting}
-FileInputStream is = new FileInputStream(pathName + request.getParameter("imageName"));
+FileInputStream is = new FileInputStream(
+     pathName + request.getParameter("imageName"));
 \end{lstlisting}
 This allows the attacker to read all files that the servlet container have access to.
 
