@@ -231,5 +231,58 @@ JdbcRdmsExporterDAO.java + friends
 OpenXdata have an exporter that exports submitted forms (XML files) to another database, because of the nature of the task it is hard to use prepared statements.
 There are no validations to check that the submitted data contains injected SQL.
 
+\subsection{Header Manipulation}
+HTTP headers are control information passed from web clients to web servers on HTTP requests, and from web servers to web clients on HTTP responses. Header manipulation is one of vulnerability in client server interaction. 
+Header Manipulation vulnerabilities occur when:
+\begin{enumerate}
+ \item Data enters a web application through an untrusted source, most frequently an HTTP request.
+ \item The data is included in an HTTP response header sent to a web user without being validated.
+\end{enumerate}
 
+The analysis tool result shows that header manipulation vulnerability occurs with HTTP response header than request. This can creates different types of attaches such as cache-poisoning, cross-site scripting, cross-user defacement, page hijacking, and cookie manipulation.
+
+DataExportServlet.java:101
+
+In this servlet, the "filename" is an input from the users. On the current openxdata system implementation, it does not validate this input so that there is possible header manuplation attacks such as HTTP response splitting and cross site scripting.
+
+\begin{lstlisting}
+response.setHeader("Content-Disposition", "attachment; 
+filename=" + filename + ".csv");
+\end{lstlisting} 
+
+MultimediaServlet.java:133
+
+This servlet gets two unvalidated inputs request (variable contextType and name) from the users and and perform a responses. There is a potential HTTP response splitting and cross-site scripting attacks.
+ 
+\begin{lstlisting}
+response.setContentType(contentType);
+response.setHeader
+(OpenXDataConstants.HTTP_HEADER_CONTENT_DISPOSITION,
+OpenXDataConstants.HTTP_HEADER_CONTENT_DISPOSITION_VALUE + 
+name + "\"");
+\end{lstlisting} 
+
+ReportServlet.java:68
+
+This servlet does the reporting by taking filename as an input. The current openxdata release do not validate this input. There is a possible Header manupulation attacks.
+
+\begin{lstlisting}
+response.setHeader("Content-Disposition", "attachment; 
+filename=\"" + fileName + "\"");
+\end{lstlisting} 
+ 
+ StudyExportServlet.java:95
+ 
+ This servlet takes filename as an input and export study/form as xml data. Here also there is a potential risk of header manuplation attacks.
+  
+\begin{lstlisting}
+response.setHeader("Content-Disposition", "attachment; 
+filename=" + filename + ".xml");
+\end{lstlisting} 
+ 
+ Head Manuplation attack Mitigation:
+ 
+Input validation takes the first place to mitigate header manuplation attacks. Each input from users must be validated against with malicious code/characters. The openXdata community has considered the potential risk of this attack and now we are working on possible solution to mitigate the attacks. 
+ 
+ 
 \end{document}
