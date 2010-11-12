@@ -203,13 +203,16 @@ There are some setters in the Servlets that is used for unit testing. These meth
 We consider them as false positives.
 
 \subsection{SQL Injection}
-HibernateFormDownloadDAO.java:113
 The SQL is generated like this
-\begin{lstlisting}
-"select form_definition_version_id,xform from form_definition_version fdv" +
-    " inner join form_definition fd on fd.form_definition_id=fdv.form_definition_id" +
-    " where xform is not null" + (studyId != null ? " and fd.study_id="+studyId : "") +
-    (defaultForms ? " and is_default=1" : "") + " order by fd.name";
+\begin{lstlisting}[caption=HibernateFormDownloadDAO.java:113]
+"select form_definition_version_id,xform" +
+" from form_definition_version fdv" +
+" inner join form_definition fd on" +
+"   fd.form_definition_id=fdv.form_definition_id" +
+" where xform is not null" +
+(studyId != null ? " and fd.study_id="+studyId : "") +
+    (defaultForms ? " and is_default=1" : "") +
+" order by fd.name";
 \end{lstlisting}
 where studyId is an Integer type, so we dont think that an attacker can inject SQL in this case.
 
