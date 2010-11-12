@@ -245,16 +245,15 @@ DataExportServlet.java:101
 
 In this servlet, the "filename" is an input from the users. On the current openxdata system implementation, it does not validate this input so that there is possible header manuplation attacks such as HTTP response splitting and cross site scripting.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=MultimediaServlet.java:133]
 response.setHeader("Content-Disposition", "attachment; 
 filename=" + filename + ".csv");
 \end{lstlisting} 
 
-MultimediaServlet.java:133
 
 This servlet gets two unvalidated inputs request (variable contextType and name) from the users and and perform a responses. There is a potential HTTP response splitting and cross-site scripting attacks.
  
-\begin{lstlisting}
+\begin{lstlisting}[caption=ReportServlet.java:68]
 response.setContentType(contentType);
 response.setHeader
 (OpenXDataConstants.HTTP_HEADER_CONTENT_DISPOSITION,
@@ -262,17 +261,15 @@ OpenXDataConstants.HTTP_HEADER_CONTENT_DISPOSITION_VALUE +
 name + "\"");
 \end{lstlisting} 
 
-ReportServlet.java:68
 
 This servlet does the reporting by taking filename as an input. The current openxdata release do not validate this input. There is a possible Header manupulation attacks.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=StudyExportServlet.java:95]
 response.setHeader("Content-Disposition", "attachment; 
 filename=\"" + fileName + "\"");
 \end{lstlisting} 
  
- StudyExportServlet.java:95
- 
+  
  This servlet takes filename as an input and export study/form as xml data. Here also there is a potential risk of header manuplation attacks.
   
 \begin{lstlisting}
