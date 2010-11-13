@@ -111,7 +111,7 @@ How to run OpenXdata?
  \item Open the browser at http://localhost:8080/admin
 \end{enumerate}
 
-\section{Issues reported by Fortify}
+\section{Critical}
 
 \subsection{Cross-site Scripting: Persistence}
 Fortify found 3 security flaws, all of them are false positves.
@@ -245,15 +245,16 @@ DataExportServlet.java:101
 
 In this servlet, the "filename" is an input from the users. On the current openxdata system implementation, it does not validate this input so that there is possible header manuplation attacks such as HTTP response splitting and cross site scripting.
 
-\begin{lstlisting}[caption=MultimediaServlet.java:133]
+\begin{lstlisting}
 response.setHeader("Content-Disposition", "attachment; 
 filename=" + filename + ".csv");
 \end{lstlisting} 
 
+MultimediaServlet.java:133
 
 This servlet gets two unvalidated inputs request (variable contextType and name) from the users and and perform a responses. There is a potential HTTP response splitting and cross-site scripting attacks.
  
-\begin{lstlisting}[caption=ReportServlet.java:68]
+\begin{lstlisting}
 response.setContentType(contentType);
 response.setHeader
 (OpenXDataConstants.HTTP_HEADER_CONTENT_DISPOSITION,
@@ -261,16 +262,17 @@ OpenXDataConstants.HTTP_HEADER_CONTENT_DISPOSITION_VALUE +
 name + "\"");
 \end{lstlisting} 
 
+ReportServlet.java:68
 
 This servlet does the reporting by taking filename as an input. The current openxdata release do not validate this input. There is a possible Header manupulation attacks.
 
-\begin{lstlisting}[caption=StudyExportServlet.java:95]
+\begin{lstlisting}[caption= StudyExportServlet.java:95]
 response.setHeader("Content-Disposition", "attachment; 
 filename=\"" + fileName + "\"");
 \end{lstlisting} 
  
-  
- This servlet takes filename as an input and export study/form as xml data. Here also there is a potential risk of header manuplation attacks.
+ 
+This servlet takes filename as an input and export study/form as xml data. Here also there is a potential risk of header manuplation attacks.
   
 \begin{lstlisting}
 response.setHeader("Content-Disposition", "attachment; 
@@ -280,7 +282,40 @@ filename=" + filename + ".xml");
 \subsubsection {Head Manuplation attack Mitigation}
  
 Input validation takes the first place to mitigate header manuplation attacks. Each input from users must be validated against with malicious code/characters. The openXdata community has considered the potential risk of this attack and now we are working on possible solution to mitigate the attacks. 
- 
-\section{Mitigation for attacks}
 
+\subsection{Insecure Randomness}
+
+Random values are useful in software development and generating true random value has a challenge. “When software generates predictable values in a context requiring unpredictability, it may be possible for an attacker to guess the next value that will be generated, and use this guess to impersonate another user or access sensitive information.”[7]\\\\
+
+
+In this code , random number has generated using nextLong() and the random number generator implemented by nextLong() cannot withstand a cryptographic attack. 
+\begin{lstlisting}[caption=openXdataSecurityUtil.java:175]
+public static String getRandomToken() 
+{
+  Random rng = new Random();
+  return encodeString(Long.toString(System.currentTimeMillis()) 
+  + Long.toString(rng.nextLong()));
+}
+\end{lstlisting}
+
+\subsection{Log Forging}
+According to Common Weakness Enumeration (CWE) [8], log forging vulnerabilities allows an attacker to forge log entries or inject malicious content into logs and it may occur when data enters an application from an untrusted source and the data is written to an application or system log file.\\\\
+Findings from Fortify shows log forging vulnerabilities in the followings code: 
+
+
+\begin{lstlisting}[caption=DataImportServlet.java:124]
+log.info("msisdn " + msisdn + " is user " + msisdnUser.getName());
+\end{lstlisting}
+
+\begin{lstlisting}[caption=ImportServlet.java:77]
+log.info("Starting import of type: " + importType);
+\end{lstlisting}
+
+\begin{lstlisting}[caption=ReExportAllFormData.java:88]
+log.info("Found formBinding (for exported table name) :"+formBinding);
+\end{lstlisting}
+
+\begin{lstlisting}[caption=ReportManager.java:125]
+log.info("Creating BIRT engine config with BIRT_HOME = " + birtHome);
+\end{lstlisting} 
 \end{document}
