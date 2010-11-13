@@ -1,9 +1,11 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage{amsthm}
 \usepackage{listings}
+\usepackage[usenames,dvipsnames]{color}
 
 \theoremstyle{definition}
 \newtheorem*{defn}{Definition}
+\definecolor{light-gray}{gray}{0.85}
 
 \title{INF226 Group 5}
 \author{Jonny Heggheim \and Samson Gejibo}
@@ -18,7 +20,9 @@
 \lstset{
   language=Java,
   frame=single,
-  showstringspaces=false
+  framexrightmargin=17mm,
+  showstringspaces=false,
+  backgroundcolor=\color{light-gray}
 }
 
 \section{Project Objective}
@@ -310,10 +314,12 @@ log.info("Starting import of type: " + importType);
 \end{lstlisting}
 
 \begin{lstlisting}[caption=ReExportAllFormData.java:88]
-log.info("Found formBinding (for exported table name) :"+formBinding);
+log.info("Found formBinding (for exported table 
+name) :"+formBinding);
 \end{lstlisting}
 
 \begin{lstlisting}[caption=ReportManager.java:125]
-log.info("Creating BIRT engine config with BIRT_HOME = " + birtHome);
+log.info("Creating BIRT engine config with BIRT_HOME = " + 
+birtHome);
 \end{lstlisting} 
 \end{document}
