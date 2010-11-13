@@ -188,13 +188,13 @@ mailSender = ctx.getBean("mailSender");
 userService = ctx.getBean("userService");
 userDetailsService = ctx.getBean("userDetailsService");
 messageSource = ctx.getBean("messageSource");
-userLocale = new Locale((String)
+userLocale = new Locale(
 	request.getSession().getAttribute("locale"));
 \end{lstlisting}
 The class ResetPasswordServlet is a singleton, so the member fields is shared between users.
 The result is that one user could see another user's data.
-Since all beans that is provided here is singletons it would not make a different, but for readability it should be fixed.
-
+The userLocale is a issue, a user could get another user locale, this bug should be fixed.
+All ctx.getBean(..) call would return the same instance, so it would it would not make a different, but for readability it should be fixed.
 
 \begin{lstlisting}[caption=DataExportServlet.java:116 ++]
 public void setDataExport(DataExport dataExport) {
