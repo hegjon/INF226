@@ -183,8 +183,7 @@ for(Object[] user : users){
 This is the intention, so we consider this as false positive.
 
 \subsection{Race Condition: Singleton Member Field}
-ResetPasswordServlet.java:78-82
-\begin{lstlisting}
+\begin{lstlisting}[caption=ResetPasswordServlet.java:78-82]
 mailSender = ctx.getBean("mailSender");
 userService = ctx.getBean("userService");
 userDetailsService = ctx.getBean("userDetailsService");
